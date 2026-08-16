@@ -1,0 +1,4 @@
+cat > terraform/terraform.tfvars.example <<'EOF'
+# Fake address that will be committed 
+
+my_ip = "203.0.113.42/32"
