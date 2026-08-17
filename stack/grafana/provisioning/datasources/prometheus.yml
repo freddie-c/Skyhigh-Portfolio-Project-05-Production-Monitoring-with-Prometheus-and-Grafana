@@ -1,0 +1,10 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    # Container name, not an IP — Docker's internal DNS resolves it
+    url: http://prometheus:9090
+    isDefault: true
+    editable: false

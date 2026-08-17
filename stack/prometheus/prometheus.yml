@@ -1,0 +1,25 @@
+global:
+  # How often Prometheus scrapes every target
+  scrape_interval: 15s
+  # How often alerting rules are evaluated
+  evaluation_interval: 15s
+  # Labels attached to all metrics leaving this server
+  external_labels:
+    monitor: skyhigh-monitoring
+
+# Alert rule files loaded at startup
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+scrape_configs:
+  # Prometheus scraping itself — proves the server is alive
+  - job_name: prometheus
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # The target EC2 instance running node_exporter
+  - job_name: node
+    static_configs:
+      - targets: ['172.31.2.113:9100']
+        labels:
+          instance_name: skyhigh-target

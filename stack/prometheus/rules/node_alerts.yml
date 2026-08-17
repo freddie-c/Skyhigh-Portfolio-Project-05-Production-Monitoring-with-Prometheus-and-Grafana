@@ -1,0 +1,29 @@
+groups:
+  - name: node_alerts
+    rules:
+      # Fires when a scrape target stops responding — your dead-man's switch
+      - alert: TargetDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Target {{ $labels.instance }} is unreachable"
+          description: "Prometheus has failed to scrape this target for over 1 minute."
+
+      # CPU above 80% sustained for 2 minutes
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU above 80% on {{ $labels.instance }}"
+
+      # Root filesystem over 90% full
+      - alert: LowDiskSpace
+        expr: (1 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})) * 100 > 90
+        for: 5m
+        labels:
+          severity: critical
+          summary: "Root filesystem over 90% full"
