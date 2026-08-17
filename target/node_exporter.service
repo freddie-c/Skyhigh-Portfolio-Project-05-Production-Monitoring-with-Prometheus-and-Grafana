@@ -1,0 +1,38 @@
+[Unit]
+# Human-readable name shown by systemctl status
+Description=Prometheus Node Exporter
+
+# Wait for real network connectivity before starting
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Foreground process — systemd tracks the main PID directly
+Type=simple
+
+# Runs as a dedicated no-login system user, never root
+User=node_exporter
+Group=node_exporter
+
+# Bind all interfaces on 9100; the security group is what restricts access
+ExecStart=/usr/local/bin/node_exporter --web.listen-address=:9100 --collector.systemd --collector.processes
+
+# Restart automatically if the process crashes
+Restart=on-failure
+RestartSec=5
+
+# Process can never gain privileges, even via a setuid binary
+NoNewPrivileges=true
+
+# Entire filesystem is read-only to this process
+ProtectSystem=strict
+
+# /home, /root, and /run/user are invisible
+ProtectHome=true
+
+# Private /tmp namespace — cannot see or touch other processes' temp files
+PrivateTmp=true
+
+[Install]
+# Start at boot once the system reaches normal multi-user state
+WantedBy=multi-user.target
