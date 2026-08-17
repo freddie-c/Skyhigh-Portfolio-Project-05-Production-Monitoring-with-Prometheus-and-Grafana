@@ -31,3 +31,8 @@ variable "ssm_parameter_path" {
   type        = string
   default     = "/skyhigh/monitoring" # The path prefix in SSM Parameter Store where secrets are stored, e.g., /skyhigh/monitoring
 }
+
+variable "alert_email" {
+  description = "Email address for SNS alarm notifications"
+  type        = string
+}
