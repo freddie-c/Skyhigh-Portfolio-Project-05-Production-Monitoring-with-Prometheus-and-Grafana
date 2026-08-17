@@ -2,9 +2,10 @@ apiVersion: 1
 
 datasources:
   - name: Prometheus
+    # Fixed UID so provisioned dashboards can reference it reliably
+    uid: prometheus
     type: prometheus
     access: proxy
-    # Container name, not an IP — Docker's internal DNS resolves it
     url: http://prometheus:9090
     isDefault: true
     editable: false
