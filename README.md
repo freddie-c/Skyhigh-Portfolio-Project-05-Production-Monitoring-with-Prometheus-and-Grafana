@@ -32,13 +32,13 @@ I built a complete monitoring stack from an empty directory: Terraform-provision
 
 **1. Both scrape targets healthy**
 
-Screenshot here
+<img width="927" height="129" alt="2 Health Up" src="https://github.com/user-attachments/assets/20e2af52-3ee0-4b34-81a7-95a5f965bb54" />
 
 Prometheus scraping itself and the target across the VPC. Note the scrape durations — 4.7ms for localhost, 85.6ms for the cross-instance target. That gap is real network round-trip and it's the baseline to compare against when something degrades.
 
 **2. Five-panel dashboard, live data**
 
-Screenshot here
+<img width="1425" height="550" alt="Dashboard screenshot 2" src="https://github.com/user-attachments/assets/e1dcb6e4-0941-45e1-bfd5-7e975455d8e9" />
 
 CPU, memory, disk by mount, network throughput, and system load. Memory top-left because that's where eyes land first during an incident. Every query written by hand — no imported community dashboard.
 
@@ -50,17 +50,36 @@ Screenshot here
 
 **4. node_exporter surviving a reboot with nobody logged in**
 
-Screenshot here
+<img width="452" height="76" alt="Survive Reboot" src="https://github.com/user-attachments/assets/7ae08d50-7547-45fb-81ac-5c9228efaf09" />
 
 `uptime` reports 5 minutes and **0 users**, and the exporter is serving 2,184 metrics. With `nohup ./node_exporter &`, those two facts are mutually exclusive.
 
 **5. Alert firing end to end**
 
-Screenshot here
+<img width="1397" height="379" alt="Rule firing" src="https://github.com/user-attachments/assets/0aae6c37-37fe-45c1-840f-7d234a7e453a" />
+Rule being fired
+
+<img width="1428" height="462" alt="Promo firing" src="https://github.com/user-attachments/assets/5703ddc5-778b-4c8b-aba5-70223ded4aff" />
+Prometheus firing
+
+<img width="1433" height="558" alt="Dashboard firing" src="https://github.com/user-attachments/assets/51ceafd5-54b4-4ab6-a3c5-4182cf5cac63" />
+Dashboard showing CPU 100%
+
+<img width="1437" height="511" alt="CPU Firing" src="https://github.com/user-attachments/assets/dc3db12f-93f7-4a2e-ad4c-118bcaac4cec" />
+Webhook firing email
+
+<img width="1178" height="282" alt="CPU Resolved" src="https://github.com/user-attachments/assets/56abf9af-72a3-4a02-8227-08818389d48e" />
+Webhook resolved email
 
 `stress-ng --cpu 4` on the target → CPU pinned at 100% → Grafana rule Normal → Pending → Firing → webhook POST received in 0.001s, with the `{{ $labels.instance }}` template rendered to the actual host. The Pending state is the interesting one: the threshold was crossed but the rule waited two full minutes to confirm it was sustained.
 
 **6. Two independent alerting systems catching the same condition**
+
+<img width="1397" height="379" alt="Rule firing" src="https://github.com/user-attachments/assets/0aae6c37-37fe-45c1-840f-7d234a7e453a" />
+Rule being fired
+
+<img width="1428" height="462" alt="Promo firing" src="https://github.com/user-attachments/assets/5703ddc5-778b-4c8b-aba5-70223ded4aff" />
+Prometheus firing
 
 Grafana rules and Prometheus-native rules both fired on the same CPU spike. Prometheus rules keep evaluating if Grafana is down; Grafana rules give you contact-point routing. Running both is defense in depth.
 
