@@ -34,6 +34,8 @@ I built a complete monitoring stack from an empty directory: Terraform-provision
 
 <img width="927" height="129" alt="2 Health Up" src="https://github.com/user-attachments/assets/20e2af52-3ee0-4b34-81a7-95a5f965bb54" />
 
+<img width="1434" height="547" alt="Prom Targets Up" src="https://github.com/user-attachments/assets/d228c0fc-b1b1-4bb7-93d9-5f5f7a97db90" />
+
 Prometheus scraping itself and the target across the VPC. Note the scrape durations — 4.7ms for localhost, 85.6ms for the cross-instance target. That gap is real network round-trip and it's the baseline to compare against when something degrades.
 
 **2. Five-panel dashboard, live data**
@@ -44,7 +46,6 @@ CPU, memory, disk by mount, network throughput, and system load. Memory top-left
 
 **3. Dashboard survives a total volume wipe**
 
-Screenshot here
 
 `docker compose down && docker volume rm monitoring_grafana-data && docker compose up -d` destroys Grafana's entire database. The dashboard and datasource come back anyway, because they're provisioned from files in this repository. That is the difference between "I set up Grafana" and "I can redeploy this stack from scratch."
 
